@@ -3,7 +3,7 @@ import { number } from "@storybook/addon-knobs";
 
 import { ChartOne } from "./Chart-1";
 import { ChartTwo } from "./Chart-2";
-import { ChartThree } from "./Chart-3";
+import { ChartForce, ChartThree } from "./Chart-3";
 
 export default {
   title: "Example/Chart",
@@ -39,10 +39,15 @@ const ChartUpdateAxis = (args) => {
 
   const [dataset, setDataset] = useState(randomData(datasetParams));
 
+  useEffect(() => {
+    setDataset(randomData(datasetParams));
+  }, [value]);
+
   return (
     <>
       <input
         type="range"
+        step="20"
         onChange={() => setDataset(randomData(datasetParams))}
       />
       <ChartOne {...args} dataset={dataset} />
@@ -58,9 +63,10 @@ ChartUpdateAxisSB.args = {
 const ChartWithZoom = (args) => {
   const dataset = randomData({
     size: 500,
-    fixedRadius: true,
-    range: [-3000, 3000],
+    range: [-300, 300],
   });
+
+  console.log(dataset);
 
   return <ChartTwo {...args} dataset={dataset} width={1000} height={500} />;
 };
@@ -68,4 +74,15 @@ const ChartWithZoom = (args) => {
 export const ChartWithZoomSB = ChartWithZoom.bind({});
 ChartUpdateAxisSB.args = {
   primary: true,
+};
+
+export const ChartForceSimulationn = (args) => {
+  const dataset = randomData({
+    size: 500,
+    range: [-300, 300],
+  });
+
+  console.log(dataset);
+
+  return <ChartForce {...args} dataset={dataset} width={1000} height={500} />;
 };

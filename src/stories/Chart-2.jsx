@@ -46,13 +46,12 @@ export const renderChart = (dataset) => {
   const yAxis = svg.select("#yAxis").call(d3.axisLeft(yScale));
 
   //color scale
+  const listRadius = dataset.map((d) => d.r);
+
   const colorScale = d3
     .scaleLinear()
-    .domain(d3.extent(listXCoordinates))
-    .range(["white", "orange"]);
-
-  // Y axis and Scale
-  const listRadius = dataset.map((d) => d.r);
+    .domain(d3.extent(listRadius))
+    .range(["white", "blue"]);
 
   const radiusScale = d3
     .scaleLinear()
@@ -83,10 +82,10 @@ export const renderChart = (dataset) => {
     .attr("cx", (d) => xScale(d.x))
     .attr("cy", (d) => yScale(d.y))
     .attr("r", (d) => radiusScale(d.r))
-    .style("fill", (d) => colorScale(d.x))
+    .style("fill", (d) => colorScale(d.r))
+    .style("stroke", "white")
     .style("fill-opacity", 0.8)
-    .style("stroke", (d) => colorScale(d.x))
-    .style("stroke-width", 1)
+    .style("stroke-width", 0.2)
     .style("opacity", 1);
 
   // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
@@ -134,7 +133,6 @@ export const renderChart = (dataset) => {
 
 export function ChartTwo({ dataset }) {
   useEffect(() => {
-    console.log("---- dataset as changed ----", dataset);
     renderChart(dataset);
   }, []);
 
