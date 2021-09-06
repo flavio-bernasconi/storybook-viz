@@ -16,13 +16,12 @@ const renderChart = () => {
 
   const numNodes = 50;
   const dataset = d3.range(numNodes).map((_, i) => ({
-    radius: Math.random() * 20 + 2,
+    radius: Math.random() * 10 + 2,
     category: i % 3,
   }));
 
   const node = svg
     .select(".nodes")
-    .attr("transform", "translate(0,200)")
     .selectAll("circle")
     .data(dataset)
     .enter()
@@ -34,8 +33,8 @@ const renderChart = () => {
 
   const simulation = d3
     .forceSimulation(dataset)
-    .force("charge", d3.forceManyBody().strength(10))
-    .force("center", d3.forceCenter(250, 50))
+    .force("charge", d3.forceManyBody().strength(1))
+    .force("center", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
     .force(
       "collision",
       d3.forceCollide().radius((d) => d.radius)
@@ -46,18 +45,22 @@ const renderChart = () => {
     node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
   }
 
+  let spread = true;
   d3.select("button").on("click", () => {
+    console.log({ spread });
     d3.forceSimulation(dataset)
-      .force("charge", d3.forceManyBody().strength(0.7))
+      .force("charge", d3.forceManyBody().strength(spread ? 0.2 : 10))
       .force(
         "x",
-        d3.forceX().x((d) => xCenter[d.category])
+        d3.forceX().x((d) => (spread ? xCenter[d.category] : WIDTH / 2))
       )
+      .force("y", d3.forceY().y(HEIGHT / 2))
       .force(
         "collision",
         d3.forceCollide().radius((d) => d.radius)
       )
       .on("tick", ticked);
+    spread = !spread;
   });
 };
 
